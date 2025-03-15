@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lvl_memowave
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8000:8000"
+    networks:
+      - memowave
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:15
+    container_name: lvl_memowave_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: memowave
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - memowave
+    
+networks:
+  memowave:
+    name: memowave
+
+volumes:
+  dbdata:
