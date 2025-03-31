@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -16,18 +17,23 @@ class UserController extends Controller
         return response()->json($users); 
     }
 
-    public function store(Request $request) {
-        $user = $request->getContent();
-        $validate = Validator::make($user, [
-            'username' => 'required|min:3|max:255',
-            'password' =>  'required|min:3|max:255' 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|min:3|max:255|unique:users,username',
+            'password' =>  'required|min:3|max:255'
         ]);
-
-        if($validate->fails()) {
-            return response()->json([
-                'errors' => $validate->errors()
-            ], 422);
+        
+        $data = json_decode($request->getContent());
+        try {
+            $user = new User;
+            $user->username = $data->username;
+            $user->password = Hash::make($data->password);
+            $user->save();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            throw new Exception($e->getMessage());
         }
-        Log::info(json_encode($user));
+        return response('success', 200);
     }
 }
