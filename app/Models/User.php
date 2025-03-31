@@ -10,9 +10,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *

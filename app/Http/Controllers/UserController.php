@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         $users = User::all();
         // return $users;
-        return csrf_token(); 
+        return response()->json($users); 
     }
 
     public function store(Request $request) {
