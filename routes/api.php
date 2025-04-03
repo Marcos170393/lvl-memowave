@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(UserController::class)->group(function () {
 
-    Route::get('/users', 'index');
+    Route::post('/users/login', 'login');
   
     Route::post('/users', 'store');
   });
